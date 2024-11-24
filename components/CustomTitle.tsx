@@ -80,10 +80,10 @@ export const CustomTitle = () => {
 
 const styles = StyleSheet.create({
   titleContainer: {
-    width: "100%",
+    width: 250,
+    alignItems: 'center',
     overflow: 'hidden',
     position: 'relative',
-
   },
   titleTop: {
     position: 'absolute',

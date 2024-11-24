@@ -30,6 +30,7 @@ export const AppNavigation = () => {
               />
             ),
             headerTitle: () => <CustomTitle />,
+            headerTitleAlign: 'center',
           })}
         />
       </Stack.Navigator>
