@@ -1,29 +1,20 @@
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text } from "react-native";
 
-export const СustomHandle = () => (
-  <View style={styles.container}>
-    <Image source={require("../assets/pull-icon.png")} style={styles.image} />
-
-    <Text style={styles.text}>Pull up the song list</Text>
+export const CustomHandle = () => (
+  <View
+    style={{
+      alignItems: "center",
+      justifyContent: 'center',
+      width: "100%",
+      marginTop: 10,
+    }}
+  >
+  <View style={{
+    height: 5,
+    width: 80,
+    backgroundColor: '#272C32',
+    borderRadius: 5,
+  }}>
+  </View>
   </View>
 );
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    width: "100%",
-    gap: 5,
-    margin: 5,
-  },
-  image: {
-    height: 5,
-    width: "100%",
-    objectFit: "contain",
-  },
-  text: {
-    color: "#666666",
-    fontSize: 12,
-    fontFamily: "RussoOne_400Regular",
-    textTransform: "uppercase",
-  },
-});
