@@ -5,37 +5,7 @@ import { ControlPanel } from "../components/ControlPanel";
 import { useCallback, useMemo, useRef } from "react";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-const customHandle = () => (
-  <View
-    style={{
-      alignItems: "center",
-      width: "100%",
-      gap: 5,
-      margin: 5,
-    }}
-  >
-    <Image
-      source={require("../assets/pull-icon.png")}
-      style={{
-        height: 5,
-        width: "100%",
-        objectFit: "contain",
-      }}
-    />
-
-    <Text
-      style={{
-        color: "#666666",
-        fontSize: 12,
-        fontFamily: "RussoOne_400Regular",
-        textTransform: "uppercase",
-      }}
-    >
-      Pull up the song list
-    </Text>
-  </View>
-);
+import { СustomHandle } from "../components/СustomHandle";
 
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -71,39 +41,9 @@ export const Main = () => {
         </View>
 
         <ProgressBar />
-        <View style={{ marginBottom: 10 }}>
+        <View style={{ marginBottom: 20 }}>
           <ControlPanel />
         </View>
-
-        {/* <TouchableWithoutFeedback onPress={handlePlayListOpen}>
-        <View
-          style={{
-            alignItems: "center",
-            width: "100%",
-            gap: 5,
-          }}
-        >
-          <Image
-            source={require("../assets/pull-icon.png")}
-            style={{
-              height: 5,
-              width: "100%",
-              objectFit: "contain",
-            }}
-          />
-          
-          <Text
-            style={{
-              color: "#666666",
-              fontSize: 12,
-              fontFamily: "RussoOne_400Regular",
-              textTransform: "uppercase",
-            }}
-          >
-            open the song list
-          </Text>
-        </View>
-        </TouchableWithoutFeedback> */}
 
         <BottomSheet
           index={0}
@@ -111,7 +51,7 @@ export const Main = () => {
           snapPoints={snepPoints}
           onChange={handleSheetChanges}
           backgroundStyle={{ backgroundColor: "#000000" }}
-          handleComponent={customHandle}
+          handleComponent={СustomHandle}
         >
           <BottomSheetView
             style={{
@@ -119,7 +59,7 @@ export const Main = () => {
               alignItems: "center",
             }}
           >
-            <Text>Hehe</Text>
+            <Text style={{ color: "#FFF" }}>Hehe</Text>
           </BottomSheetView>
         </BottomSheet>
       </LinearGradient>
