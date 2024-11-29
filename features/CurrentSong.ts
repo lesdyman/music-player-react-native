@@ -14,11 +14,7 @@ const CurrentSongSlice = createSlice({
   initialState,
   reducers: {
     setCurrentSong: (state, action: PayloadAction<Track>) => {
-      if (state.currentSong?.id === action.payload.id) {
-        state.currentSong = null;
-      } else {
         state.currentSong = action.payload;
-      }
     },
   },
 });
