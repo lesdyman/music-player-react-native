@@ -2,23 +2,28 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { ProgressBar } from "../components/ProgressBar";
 import { ControlPanel } from "../components/ControlPanel";
-import { useMemo, useRef } from "react";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { useEffect, useRef } from "react";
+import BottomSheet from "@gorhom/bottom-sheet";
 import {
   GestureHandlerRootView,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
-import { BasicButton } from "../components/BasicButton";
-import { CustomHandle } from "../components/СustomHandle";
-import { BasicCell } from "../components/BasicCell";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../data/store";
+import { fetchSongs } from "../features/AllSongs";
+import { PlayList } from "./PlayList";
 
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
-  const handlePlaylistClose = () => bottomSheetRef.current?.close();
+  const dispatch = useDispatch<AppDispatch>();
+  const { currentSong } = useSelector((state: RootState) => state.currentSong);
 
-  const snepPoints = useMemo(() => ["25%", "50%", "85%"], []);
+  const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
+
+  useEffect(() => {
+    dispatch(fetchSongs());
+  }, []);
 
   // const handleSheetChanges = useCallback((index: number) => {
   //   console.log("handleSheetChanges", index);
@@ -40,10 +45,17 @@ export const Main = () => {
               end={{ x: 1, y: 1 }}
               style={styles.imageBorder}
             >
-              <Image
-                source={require("../assets/JD_alb.jpg")}
-                style={styles.coverImage}
-              />
+              {!currentSong ? (
+                <Image
+                  source={require("../assets/speaker_default.jpg")}
+                  style={styles.coverImage}
+                />
+              ) : (
+                <Image
+                  source={{ uri: currentSong?.album_image }}
+                  style={styles.coverImage}
+                />
+              )}
             </LinearGradient>
           </View>
         </View>
@@ -78,144 +90,7 @@ export const Main = () => {
           </Text>
         </TouchableWithoutFeedback>
 
-        <BottomSheet
-          index={-1}
-          ref={bottomSheetRef}
-          snapPoints={snepPoints}
-          // onChange={handleSheetChanges}
-          handleComponent={CustomHandle}
-          enablePanDownToClose
-          backgroundStyle={{
-            backgroundColor: "#0E1013",
-            shadowColor: "#b2b2b2",
-            shadowOffset: { width: 1, height: 1 },
-            shadowOpacity: 0.5,
-            shadowRadius: 3,
-            elevation: 3,
-          }}
-        >
-          <BottomSheetView
-            style={{
-              flex: 1,
-              position: "relative",
-              alignItems: "center",
-              justifyContent: "flex-start",
-              width: "100%",
-              paddingVertical: 50,
-              paddingHorizontal: 25,
-            }}
-          >
-            {/* CLOSE BUTTON */}
-            <View
-              style={{
-                position: "absolute",
-                right: 15,
-                top: 5,
-              }}
-            >
-              <TouchableWithoutFeedback onPress={handlePlaylistClose}>
-                <BasicButton
-                  icon_name={"chevron-down"}
-                  height={35}
-                  width={35}
-                  color={"#999999"}
-                  bColor={"#2E3339"}
-                  size={25}
-                />
-              </TouchableWithoutFeedback>
-            </View>
-
-            {/* PLAYLIST MARKUP */}
-            <BasicCell author="the cure" songTitle="fascination street" />
-
-            {/* CELL PLAYED */}
-
-            <LinearGradient
-              colors={["#FF611A", "#000000"]}
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0.5, y: 0.5 }}
-              style={{
-                height: 60,
-                width: "100%",
-                justifyContent: "center",
-                // alignItems: 'center',
-                borderTopEndRadius: 30,
-                borderBottomEndRadius: 30,
-              }}
-            >
-              <View
-                style={{
-                  height: 58,
-                  width: "99.7%",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  borderTopEndRadius: 30,
-                  borderBottomEndRadius: 30,
-                  padding: 5,
-                  backgroundColor: "#000",
-                }}
-              >
-                <View
-                  style={{
-                    justifyContent: "center",
-                    alignContent: "center",
-                    width: "auto",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "#999999",
-                      fontFamily: "RussoOne_400Regular",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    love will tear us appart
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#666666",
-                      fontSize: 12,
-                      fontFamily: "RussoOne_400Regular",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    joy devision
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <LinearGradient
-                    colors={["#FF9465", "#AF1905"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={{
-                      borderRadius: "50%",
-                      height: 30,
-                      width: 30,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <BasicButton
-                      icon_name={"pause"}
-                      height={26}
-                      width={26}
-                      color={"#FFFFFF"}
-                      bColor={"#D6361F"}
-                      size={20}
-                    />
-                  </LinearGradient>
-                </View>
-              </View>
-            </LinearGradient>
-          </BottomSheetView>
-        </BottomSheet>
+        <PlayList ref={bottomSheetRef} />
       </LinearGradient>
     </GestureHandlerRootView>
   );

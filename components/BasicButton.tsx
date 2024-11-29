@@ -6,18 +6,27 @@ interface Props {
   height: number;
   width: number;
   color: string;
-  bColor: string,
-  size: number,
+  bColor: string;
+  size: number;
 }
 
-export const BasicButton: React.FC<Props> = ({height, width, size, icon_name, color, bColor}) => (
+export const BasicButton: React.FC<Props> = ({
+  height,
+  width,
+  size,
+  icon_name,
+  color,
+  bColor,
+}) => (
   <TouchableOpacity
-  style={[styles.button, { width: width, height: height, backgroundColor: bColor }]}
->
-  <Ionicons name={icon_name} size={size} color={color} />
-</TouchableOpacity>
-)
-
+    style={[
+      styles.button,
+      { width: width, height: height, backgroundColor: bColor },
+    ]}
+  >
+    <Ionicons name={icon_name} size={size} color={color} />
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   button: {

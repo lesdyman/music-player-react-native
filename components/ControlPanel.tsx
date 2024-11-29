@@ -1,67 +1,73 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View } from "react-native";
 import { BasicButton } from "./BasicButton";
+import { useSelector } from "react-redux";
+import { RootState } from "../data/store";
 
-export const ControlPanel = () => (
-  <View style={styles.controlPanel}>
-    <LinearGradient
-      colors={["rgba(14, 16, 19, 1)", "rgba(185, 61, 9, 0.5)"]}
-      start={{ x: 0.4, y: 0.2 }}
-      end={{ x: 0.5, y: 0.1 }}
-      style={styles.controlButtonShadow}
-    >
-      <BasicButton
-        icon_name="play-skip-back"
-        width={56}
-        height={56}
-        size={20}
-        color="#979797"
-        bColor="#1A1C20"
-      />
-    </LinearGradient>
+export const ControlPanel = () => {
+  const { currentSong } = useSelector((state: RootState) => state.currentSong);
 
-    <View style={styles.playButtonRedShadow}>
+  return (
+    <View style={styles.controlPanel}>
       <LinearGradient
-        colors={["#FF9465", "#AF1905"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.playButtonBorderGradient}
+        colors={["rgba(14, 16, 19, 1)", "rgba(185, 61, 9, 0.5)"]}
+        start={{ x: 0.4, y: 0.2 }}
+        end={{ x: 0.5, y: 0.1 }}
+        style={styles.controlButtonShadow}
       >
+        <BasicButton
+          icon_name="play-skip-back"
+          width={56}
+          height={56}
+          size={20}
+          color="#979797"
+          bColor="#1A1C20"
+        />
+      </LinearGradient>
+
+      <View style={styles.playButtonRedShadow}>
         <LinearGradient
-          colors={["#EC540E", "#D6361F"]}
+          colors={["#FF9465", "#AF1905"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={styles.playButtonBorder}
+          style={styles.playButtonBorderGradient}
         >
-          <BasicButton
-            icon_name="play"
-            width={80}
-            height={80}
-            size={30}
-            color="#FFF"
-            bColor="transparent"
-          />
+          <LinearGradient
+            colors={["#EC540E", "#D6361F"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.playButtonBorder}
+          >
+            <BasicButton
+              icon_name={currentSong ? "pause" : "play"}
+              width={80}
+              height={80}
+              size={30}
+              color="#FFF"
+              bColor="transparent"
+            />
+          </LinearGradient>
         </LinearGradient>
+      </View>
+
+      <LinearGradient
+        colors={["rgba(185, 61, 9, 0.5)", "rgba(14, 16, 19, 1)"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.5, y: 0.1 }}
+        style={styles.controlButtonShadow}
+      >
+        <BasicButton
+          icon_name="play-skip-forward"
+          width={56}
+          height={56}
+          size={20}
+          color="#979797"
+          bColor="#1A1C20"
+        />
       </LinearGradient>
     </View>
-
-    <LinearGradient
-      colors={["rgba(185, 61, 9, 0.5)", "rgba(14, 16, 19, 1)"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0.5, y: 0.1 }}
-      style={styles.controlButtonShadow}
-    >
-      <BasicButton
-        icon_name="play-skip-forward"
-        width={56}
-        height={56}
-        size={20}
-        color="#979797"
-        bColor="#1A1C20"
-      />
-    </LinearGradient>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   controlPanel: {

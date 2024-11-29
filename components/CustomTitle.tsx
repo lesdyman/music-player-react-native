@@ -7,9 +7,13 @@ import {
 import { RussoOne_400Regular } from "@expo-google-fonts/russo-one";
 import { Poppins_400Regular } from "@expo-google-fonts/poppins";
 import AppLoading from "expo-app-loading";
+import { RootState } from "../data/store";
+import { useSelector } from "react-redux";
 
 
 export const CustomTitle = () => {
+
+  const {currentSong} = useSelector((state: RootState) => state.currentSong)
 
   const animation = useRef(new Animated.Value(0)).current;
   const { width } = Dimensions.get('screen');
@@ -57,7 +61,7 @@ export const CustomTitle = () => {
         }
       ]}
       >
-        love will tear us appart
+        {currentSong?.name}
       </Animated.Text>
       <Animated.Text
       numberOfLines={1}
@@ -68,11 +72,11 @@ export const CustomTitle = () => {
         }
       ]}
       >
-        love will tear us appart
+        {currentSong?.name}
       </Animated.Text>
 
       <Text style={styles.titleBottom} numberOfLines={1}>
-        joy division
+       {currentSong?.artist_name}
       </Text>
     </View>
   );
