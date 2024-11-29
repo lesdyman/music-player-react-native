@@ -1,11 +1,26 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View } from "react-native";
 import { BasicButton } from "./BasicButton";
-import { useSelector } from "react-redux";
-import { RootState } from "../data/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../data/store";
+import { setPlayback } from "../features/Playback";
 
 export const ControlPanel = () => {
+  const { playback } = useSelector((state: RootState) => state.playback);
   const { currentSong } = useSelector((state: RootState) => state.currentSong);
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handlePressPlay = () => {
+    if (!currentSong) {
+      return
+    }
+    dispatch(setPlayback(!playback));
+  };
+
+  const handlePreviousTrack = () => {};
+
+  const handleNextTrack = () => {};
 
   return (
     <View style={styles.controlPanel}>
@@ -22,6 +37,7 @@ export const ControlPanel = () => {
           size={20}
           color="#979797"
           bColor="#1A1C20"
+          onPress={handlePreviousTrack}
         />
       </LinearGradient>
 
@@ -39,12 +55,13 @@ export const ControlPanel = () => {
             style={styles.playButtonBorder}
           >
             <BasicButton
-              icon_name={currentSong ? "pause" : "play"}
+              icon_name={playback === false ? "play" : "pause"}
               width={80}
               height={80}
               size={30}
               color="#FFF"
               bColor="transparent"
+              onPress={handlePressPlay}
             />
           </LinearGradient>
         </LinearGradient>
@@ -63,6 +80,7 @@ export const ControlPanel = () => {
           size={20}
           color="#979797"
           bColor="#1A1C20"
+          onPress={handleNextTrack}
         />
       </LinearGradient>
     </View>

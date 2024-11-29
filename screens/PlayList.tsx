@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../data/store";
 import { setCurrentSong } from "../features/CurrentSong";
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import { setPlayback } from "../features/Playback";
 
 export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
   const snepPoints = useMemo(() => ["25%", "50%", "85%"], []);
@@ -36,7 +37,7 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
       <BottomSheetView style={styles.viewContainer}>
         {/* CLOSE BUTTON */}
         <View style={styles.closeButtonContainer}>
-          <TouchableWithoutFeedback onPress={handlePlaylistClose}>
+          <TouchableWithoutFeedback>
             <BasicButton
               icon_name={"chevron-down"}
               height={35}
@@ -44,6 +45,7 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
               color={"#999999"}
               bColor={"#2E3339"}
               size={25}
+              onPress={handlePlaylistClose}
             />
           </TouchableWithoutFeedback>
         </View>
@@ -54,7 +56,10 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
             <CustomCell
               activeSong={currentSong}
               song={song}
-              setActiveSong={() => dispatch(setCurrentSong(song))}
+              setActiveSong={() => {
+                dispatch(setCurrentSong(song));
+                dispatch(setPlayback(true));
+              }}
               key={song.id}
             />
           ))}

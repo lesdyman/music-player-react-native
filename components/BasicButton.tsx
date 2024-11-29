@@ -8,6 +8,7 @@ interface Props {
   color: string;
   bColor: string;
   size: number;
+  onPress: () => void;
 }
 
 export const BasicButton: React.FC<Props> = ({
@@ -17,8 +18,10 @@ export const BasicButton: React.FC<Props> = ({
   icon_name,
   color,
   bColor,
+  onPress
 }) => (
   <TouchableOpacity
+  onPress={onPress}
     style={[
       styles.button,
       { width: width, height: height, backgroundColor: bColor },

@@ -2,6 +2,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Track } from "../types/Track";
+import { useSelector } from "react-redux";
+import { RootState } from "../data/store";
 
 interface Props {
   song: Track;
@@ -15,6 +17,8 @@ export const CustomCell: React.FC<Props> = ({
   setActiveSong,
 }) => {
   const isActive = activeSong?.id === song.id;
+
+  const { playback } = useSelector((state: RootState) => state.playback);
 
   return (
     <LinearGradient
@@ -48,7 +52,7 @@ export const CustomCell: React.FC<Props> = ({
           style={styles.playButtonGradient}
         >
           <Ionicons
-            name={isActive ? "pause" : "play"}
+            name={playback && isActive ? "pause" : "play"}
             size={20}
             color={isActive ? "#FFF" : "#797C7F"}
           />
