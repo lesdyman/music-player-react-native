@@ -14,7 +14,8 @@ const CurrentSongSlice = createSlice({
   initialState,
   reducers: {
     setCurrentSong: (state, action: PayloadAction<Track>) => {
-        state.currentSong = action.payload;
+      console.log("setCurrentSong is called");
+      state.currentSong = action.payload;
     },
   },
 });

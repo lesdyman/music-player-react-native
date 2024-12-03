@@ -7,17 +7,16 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { CustomCell } from "../components/CustomCell";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../data/store";
-import { setCurrentSong } from "../features/CurrentSong";
+import { playbackControl } from "../features/Playback";
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import { setPlayback } from "../features/Playback";
+import { Track } from "../types/Track";
 
 export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
-  const snepPoints = useMemo(() => ["25%", "50%", "85%"], []);
-
+  const snapPoints = useMemo(() => ["25%", "50%", "85%"], []);
   const dispatch = useDispatch<AppDispatch>();
 
   const { songs } = useSelector((state: RootState) => state.songs);
-  const { currentSong } = useSelector((state: RootState) => state.currentSong);
+  const { currentSong } = useSelector((state: RootState) => state.playback);
 
   const handlePlaylistClose = () => {
     if (ref && (ref as React.MutableRefObject<BottomSheetMethods>).current) {
@@ -25,11 +24,19 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
     }
   };
 
+  const handleAudioPressed = async(song: Track) => {
+      try {
+        await dispatch(playbackControl(song));
+      } catch {
+        console.error("Playback failed:");
+      }
+  }
+
   return (
     <BottomSheet
       index={-1}
       ref={ref}
-      snapPoints={snepPoints}
+      snapPoints={snapPoints}
       handleComponent={CustomHandle}
       enablePanDownToClose
       backgroundStyle={styles.sheetBackgroundStyle}
@@ -37,7 +44,7 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
       <BottomSheetView style={styles.viewContainer}>
         {/* CLOSE BUTTON */}
         <View style={styles.closeButtonContainer}>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={handlePlaylistClose}>
             <BasicButton
               icon_name={"chevron-down"}
               height={35}
@@ -45,21 +52,17 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
               color={"#999999"}
               bColor={"#2E3339"}
               size={25}
-              onPress={handlePlaylistClose}
             />
           </TouchableWithoutFeedback>
         </View>
 
-        {/* PLAYLIST MARKUP */}
+        {/* PLAYLIST */}
         <ScrollView horizontal={false}>
           {songs.map((song) => (
             <CustomCell
               activeSong={currentSong}
               song={song}
-              setActiveSong={() => {
-                dispatch(setCurrentSong(song));
-                dispatch(setPlayback(true));
-              }}
+              onAudioPressed={() => handleAudioPressed(song)}
               key={song.id}
             />
           ))}

@@ -8,7 +8,7 @@ interface Props {
   color: string;
   bColor: string;
   size: number;
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 export const BasicButton: React.FC<Props> = ({

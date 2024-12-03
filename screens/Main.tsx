@@ -4,20 +4,18 @@ import { ProgressBar } from "../components/ProgressBar";
 import { ControlPanel } from "../components/ControlPanel";
 import { useEffect, useRef } from "react";
 import BottomSheet from "@gorhom/bottom-sheet";
-import {
-  GestureHandlerRootView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../data/store";
 import { fetchSongs } from "../features/AllSongs";
 import { PlayList } from "./PlayList";
+import { OpenPlaylistButton } from "../components/OpenPlaylistButtom";
 
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { currentSong } = useSelector((state: RootState) => state.currentSong);
+  const { currentSong } = useSelector((state: RootState) => state.playback);
 
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
 
@@ -63,32 +61,7 @@ export const Main = () => {
         <ProgressBar />
         <ControlPanel />
 
-        <TouchableWithoutFeedback
-          style={{
-            gap: 5,
-          }}
-          onPress={handlePlaylistOpen}
-        >
-          <Image
-            source={require("../assets/pull-icon.png")}
-            style={{
-              height: 5,
-              width: "100%",
-              objectFit: "contain",
-            }}
-          />
-
-          <Text
-            style={{
-              color: "#666666",
-              fontSize: 12,
-              fontFamily: "RussoOne_400Regular",
-              textTransform: "uppercase",
-            }}
-          >
-            Press to open the song list
-          </Text>
-        </TouchableWithoutFeedback>
+        <OpenPlaylistButton handlePlaylistOpen={handlePlaylistOpen} />
 
         <PlayList ref={bottomSheetRef} />
       </LinearGradient>
@@ -111,6 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: "50%",
     borderWidth: 5,
     borderColor: "#0F1314",
+    resizeMode: 'cover',
   },
   imageBorder: {
     alignItems: "center",
