@@ -30,14 +30,24 @@ export const ControlPanel = () => {
 
     if (direction === Direction.forward) {
       const newSong = songs[currentSongIndex + 1];
-      setCurrentSong(newSong);
-      dispatch(playbackControl(newSong));
+
+      if (currentSongIndex + 1 <= songs.length) {
+        setCurrentSong(newSong);
+        dispatch(playbackControl(newSong));
+      } else {
+        return
+      }
     }
 
     if (direction === Direction.backward) {
       const newSong = songs[currentSongIndex - 1];
-      setCurrentSong(newSong);
-      dispatch(playbackControl(newSong));
+
+      if (currentSongIndex - 1 >= 0) {
+        setCurrentSong(newSong);
+        dispatch(playbackControl(newSong));
+      } else {
+        return
+      }
     }
   };
 

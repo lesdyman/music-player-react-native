@@ -1,18 +1,27 @@
 import { Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
-import { RootState } from "../data/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../data/store";
 import { useEffect, useRef, useState } from "react";
+import {
+  playbackControl,
+  setPlayback,
+  setCurrentSong,
+} from "../features/Playback";
 
 export const ProgressBar = () => {
   const { currentSong, playback } = useSelector(
     (state: RootState) => state.playback
   );
 
+  const { songs } = useSelector((state: RootState) => state.songs);
+
   const [timePassed, setTimePassed] = useState(0);
 
   const whatIsPlaying = useRef(currentSong);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const timer = () => {
     if (currentSong && playback) {
@@ -42,6 +51,22 @@ export const ProgressBar = () => {
       return;
     }
   }, [playback, currentSong]);
+
+  useEffect(() => {
+    if (timePassed === currentSong?.duration) {
+      const currentSongIndex = songs.findIndex(
+        (song) => song.id === currentSong?.id
+      );
+      const nextSong = songs[currentSongIndex + 1];
+      if (nextSong) {
+        setCurrentSong(nextSong);
+        dispatch(playbackControl(nextSong));
+      } else {
+        dispatch(setPlayback(false));
+        dispatch(setCurrentSong(null));
+      }
+    }
+  }, [timePassed, currentSong]);
 
   const progress = currentSong?.duration
     ? timePassed / currentSong.duration
