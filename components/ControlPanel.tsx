@@ -3,24 +3,43 @@ import { StyleSheet, View } from "react-native";
 import { BasicButton } from "./BasicButton";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../data/store";
-import { setPlayback } from "../features/Playback";
+import { playbackControl, setCurrentSong } from "../features/Playback";
+
+enum Direction {
+  backward,
+  forward,
+}
 
 export const ControlPanel = () => {
-  const { playback } = useSelector((state: RootState) => state.playback);
-  const { currentSong } = useSelector((state: RootState) => state.currentSong);
+  const { playback, currentSong } = useSelector((state: RootState) => state.playback);
+  const { songs } = useSelector((state: RootState) => state.songs);
 
   const dispatch = useDispatch<AppDispatch>();
 
   const handlePressPlay = () => {
     if (!currentSong) {
-      return
+      return;
     }
-    dispatch(setPlayback(!playback));
+    dispatch(playbackControl(currentSong));
   };
 
-  const handlePreviousTrack = () => {};
+  const handleSongChange = (direction: Direction) => {
+    const currentSongIndex = songs.findIndex(
+      (song) => song.id === currentSong?.id
+    );
 
-  const handleNextTrack = () => {};
+    if (direction === Direction.forward) {
+      const newSong = songs[currentSongIndex + 1];
+      setCurrentSong(newSong);
+      dispatch(playbackControl(newSong));
+    }
+
+    if (direction === Direction.backward) {
+      const newSong = songs[currentSongIndex - 1];
+      setCurrentSong(newSong);
+      dispatch(playbackControl(newSong));
+    }
+  };
 
   return (
     <View style={styles.controlPanel}>
@@ -37,7 +56,7 @@ export const ControlPanel = () => {
           size={20}
           color="#979797"
           bColor="#1A1C20"
-          onPress={handlePreviousTrack}
+          onPress={() => handleSongChange(Direction.backward)}
         />
       </LinearGradient>
 
@@ -80,7 +99,7 @@ export const ControlPanel = () => {
           size={20}
           color="#979797"
           bColor="#1A1C20"
-          onPress={handleNextTrack}
+          onPress={() => handleSongChange(Direction.forward)}
         />
       </LinearGradient>
     </View>
