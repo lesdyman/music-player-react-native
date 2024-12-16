@@ -24,6 +24,10 @@ export const ControlPanel = () => {
   };
 
   const handleSongChange = (direction: Direction) => {
+
+    if (!currentSong) {
+      return
+    }
     const currentSongIndex = songs.findIndex(
       (song) => song.id === currentSong?.id
     );
