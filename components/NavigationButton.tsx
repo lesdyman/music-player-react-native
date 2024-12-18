@@ -9,9 +9,10 @@ interface Props {
   icon_name: keyof typeof Ionicons.glyphMap;
   height: number;
   width: number;
+  onPress?: () => void;
 }
 
-export const NavigationButton: React.FC<Props> = ({ icon_name, height, width }) => (
+export const NavigationButton: React.FC<Props> = ({ icon_name, height, width, onPress }) => (
   <View
     style={[styles.buttonShadowUp, { height: height + 2, width: width + 2 }]}
   >
@@ -29,6 +30,7 @@ export const NavigationButton: React.FC<Props> = ({ icon_name, height, width }) 
           color="#797C7F"
           bColor="#2E3339"
           size={20}
+          onPress={onPress}
         />
       </LinearGradient>
     </View>
