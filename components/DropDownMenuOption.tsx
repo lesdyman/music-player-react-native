@@ -17,7 +17,5 @@ export const DropDownMenuOption: React.FC<Props> = ({ onSelect, children }) => {
 const styles = StyleSheet.create({
   option: {
     padding: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#0E1013",
   },
 });

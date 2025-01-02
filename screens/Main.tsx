@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { ProgressBar } from "../components/ProgressBar";
 import { ControlPanel } from "../components/ControlPanel";
 import { useEffect, useRef } from "react";
@@ -10,6 +10,8 @@ import { AppDispatch, RootState } from "../data/store";
 import { fetchSongs } from "../features/AllSongs";
 import { PlayList } from "./PlayList";
 import { OpenPlaylistButton } from "../components/OpenPlaylistButtom";
+import { fetchFavoritesFromStorage, saveFavoritesToStorage } from "../utils/utils";
+import { setFavorites } from '../features/Favorites';
 
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -19,8 +21,17 @@ export const Main = () => {
 
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
 
+  const loadFavs = async() => {
+    const favs = await fetchFavoritesFromStorage();
+    if (favs) {
+      dispatch(setFavorites(favs))
+    }
+  }
+
   useEffect(() => {
     dispatch(fetchSongs());
+    loadFavs();
+
   }, []);
 
   // const handleSheetChanges = useCallback((index: number) => {
@@ -55,6 +66,7 @@ export const Main = () => {
                 />
               )}
             </LinearGradient>
+            
           </View>
         </View>
 

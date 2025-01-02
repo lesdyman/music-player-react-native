@@ -1,15 +1,21 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Track } from "../types/Track";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../data/store";
-import { Audio } from "expo-av";
+import { addRemoveFavorite } from "../features/Favorites";
 
 interface Props {
   song: Track;
   activeSong: Track | null;
-  onAudioPressed: () => void
+  onAudioPressed: () => void;
 }
 
 export const CustomCell: React.FC<Props> = ({
@@ -20,6 +26,8 @@ export const CustomCell: React.FC<Props> = ({
   const isActive = activeSong?.id === song.id;
 
   const { playback } = useSelector((state: RootState) => state.playback);
+  const { favorites } = useSelector((state: RootState) => state.favorites);
+
   const dispatch = useDispatch();
 
   return (
@@ -46,9 +54,22 @@ export const CustomCell: React.FC<Props> = ({
         </Text>
       </View>
 
+      <TouchableWithoutFeedback
+        onPress={() => {
+          dispatch(addRemoveFavorite(song));
+          console.log(favorites.length);
+        }}
+      >
+        {favorites.some((favSong) => favSong.id === song.id) ? (
+          <Ionicons name="heart" size={22} color={"#e31b23"} />
+        ) : (
+          <Ionicons name="heart-outline" size={22} color={"#e31b23"} />
+        )}
+      </TouchableWithoutFeedback>
+
       <TouchableOpacity
-        onPress={async() => {
-          await onAudioPressed()
+        onPress={async () => {
+          await onAudioPressed();
         }}
       >
         <LinearGradient

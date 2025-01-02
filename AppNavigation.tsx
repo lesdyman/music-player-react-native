@@ -16,7 +16,7 @@ export const AppNavigation = () => {
 
   const toggleMenu = () => {
     setIsMenuVisible((prevState) => !prevState);
-    console.log('hehehe')
+    console.log("hehehe");
   };
 
   return (
@@ -53,36 +53,29 @@ export const AppNavigation = () => {
                     setIsMenuVisible(false);
                   }}
                 >
-                  <View style={[styles.menuCell]}>
+                  <View
+                    style={[
+                      styles.menuCell,
+                      {
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#0E1013",
+                        paddingBottom: 10,
+                      },
+                    ]}
+                  >
                     <Ionicons name="shuffle" size={20} color={"#999999"} />
-                    <Text
-                      style={{
-                        color: "#999999",
-                        fontSize: 15,
-                        fontFamily: "RussoOne_400Regular",
-                      }}
-                    >
-                      Play Shuffle
-                    </Text>
+                    <Text style={styles.menuText}>Play Shuffle</Text>
                   </View>
                 </DropDownMenuOption>
                 <DropDownMenuOption
                   onSelect={() => {
-                    console.log("Option 1 is selected");
+                    console.log("Option 2 is selected");
                     setIsMenuVisible(false);
                   }}
                 >
                   <View style={[styles.menuCell]}>
                     <Ionicons name="heart" size={20} color={"#FE251B"} />
-                    <Text
-                      style={{
-                        color: "#999999",
-                        fontSize: 15,
-                        fontFamily: "RussoOne_400Regular",
-                      }}
-                    >
-                      Play Favorites
-                    </Text>
+                    <Text style={styles.menuText}>Play Favorites</Text>
                   </View>
                 </DropDownMenuOption>
               </DropMenu>
@@ -99,10 +92,14 @@ export const AppNavigation = () => {
 const styles = StyleSheet.create({
   menuCell: {
     flexDirection: "row",
-    padding: 5,
     justifyContent: "space-between",
     alignItems: "center",
     borderRadius: 5,
     gap: 10,
+  },
+  menuText: {
+    color: "#999999",
+    fontSize: 15,
+    fontFamily: "RussoOne_400Regular",
   },
 });
