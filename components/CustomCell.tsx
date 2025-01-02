@@ -61,9 +61,9 @@ export const CustomCell: React.FC<Props> = ({
         }}
       >
         {favorites.some((favSong) => favSong.id === song.id) ? (
-          <Ionicons name="heart" size={22} color={"#e31b23"} />
+          <Ionicons name="heart" size={22} color={"#8B0000"} />
         ) : (
-          <Ionicons name="heart-outline" size={22} color={"#e31b23"} />
+          <Ionicons name="heart-outline" size={22} color={"#8B0000"} />
         )}
       </TouchableWithoutFeedback>
 

@@ -10,14 +10,16 @@ import { AppDispatch, RootState } from "../data/store";
 import { fetchSongs } from "../features/AllSongs";
 import { PlayList } from "./PlayList";
 import { OpenPlaylistButton } from "../components/OpenPlaylistButtom";
-import { fetchFavoritesFromStorage, saveFavoritesToStorage } from "../utils/utils";
+import { fetchFavoritesFromStorage } from "../utils/utils";
 import { setFavorites } from '../features/Favorites';
+import { setPlaylist } from "../features/Playlist";
 
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const { currentSong } = useSelector((state: RootState) => state.playback);
+  const { songs } = useSelector((state: RootState) => state.songs)
 
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
 
@@ -33,6 +35,12 @@ export const Main = () => {
     loadFavs();
 
   }, []);
+
+  useEffect(() => {
+    if (songs.length > 0) {
+      dispatch(setPlaylist(songs));
+    }
+  }, [songs, dispatch]);
 
   // const handleSheetChanges = useCallback((index: number) => {
   //   console.log("handleSheetChanges", index);

@@ -17,6 +17,7 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
 
   const { songs } = useSelector((state: RootState) => state.songs);
   const { currentSong } = useSelector((state: RootState) => state.playback);
+  const { playlist } = useSelector((state: RootState) => state.playlist)
 
   const handlePlaylistClose = () => {
     if (ref && (ref as React.MutableRefObject<BottomSheetMethods>).current) {
@@ -58,7 +59,7 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
 
         {/* PLAYLIST */}
         <ScrollView horizontal={false}>
-          {songs.map((song) => (
+          {playlist.map((song) => (
             <CustomCell
               activeSong={currentSong}
               song={song}
