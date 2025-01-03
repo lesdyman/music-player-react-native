@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { ProgressBar } from "../components/ProgressBar";
 import { ControlPanel } from "../components/ControlPanel";
 import { useEffect, useRef } from "react";
@@ -30,6 +30,8 @@ export const Main = () => {
     }
   }
 
+
+
   useEffect(() => {
     dispatch(fetchSongs());
     loadFavs();
@@ -38,7 +40,7 @@ export const Main = () => {
 
   useEffect(() => {
     if (songs.length > 0) {
-      dispatch(setPlaylist(songs));
+      dispatch(setPlaylist('all'));
     }
   }, [songs, dispatch]);
 

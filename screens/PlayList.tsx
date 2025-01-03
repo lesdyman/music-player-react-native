@@ -17,7 +17,8 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
 
   const { songs } = useSelector((state: RootState) => state.songs);
   const { currentSong } = useSelector((state: RootState) => state.playback);
-  const { playlist } = useSelector((state: RootState) => state.playlist)
+  const { playlist } = useSelector((state: RootState) => state.playlist);
+  const { favorites } = useSelector((state: RootState) => state.favorites);
 
   const handlePlaylistClose = () => {
     if (ref && (ref as React.MutableRefObject<BottomSheetMethods>).current) {
@@ -25,13 +26,13 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
     }
   };
 
-  const handleAudioPressed = async(song: Track) => {
-      try {
-        await dispatch(playbackControl(song));
-      } catch {
-        console.error("Playback failed:");
-      }
-  }
+  const handleAudioPressed = async (song: Track) => {
+    try {
+      await dispatch(playbackControl(song));
+    } catch {
+      console.error("Playback failed:");
+    }
+  };
 
   return (
     <BottomSheet
@@ -59,14 +60,23 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
 
         {/* PLAYLIST */}
         <ScrollView horizontal={false}>
-          {playlist.map((song) => (
-            <CustomCell
-              activeSong={currentSong}
-              song={song}
-              onAudioPressed={() => handleAudioPressed(song)}
-              key={song.id}
-            />
-          ))}
+          {playlist === "all"
+            ? songs.map((song) => (
+                <CustomCell
+                  activeSong={currentSong}
+                  song={song}
+                  onAudioPressed={() => handleAudioPressed(song)}
+                  key={song.id}
+                />
+              ))
+            : favorites.map((song) => (
+                <CustomCell
+                  activeSong={currentSong}
+                  song={song}
+                  onAudioPressed={() => handleAudioPressed(song)}
+                  key={song.id}
+                />
+              ))}
         </ScrollView>
       </BottomSheetView>
     </BottomSheet>

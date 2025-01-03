@@ -8,16 +8,14 @@ import { DropMenu } from "./components/DropMenu";
 import { DropDownMenuOption } from "./components/DropDownMenuOption";
 import { StyleSheet, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "./data/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./data/store";
 import { setPlaylist } from "./features/Playlist";
 
 export const AppNavigation = () => {
   const Stack = createNativeStackNavigator();
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const { songs } = useSelector((state: RootState) => state.songs);
-  const { favorites } = useSelector((state: RootState) => state.favorites);
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -57,7 +55,7 @@ export const AppNavigation = () => {
                 <DropDownMenuOption
                   onSelect={() => {
                     console.log("Option 1 is selected");
-                    dispatch(setPlaylist(songs));
+                    dispatch(setPlaylist('all'));
                     setIsMenuVisible(false);
                   }}
                 >
@@ -78,7 +76,7 @@ export const AppNavigation = () => {
                 <DropDownMenuOption
                   onSelect={() => {
                     console.log("Option 2 is selected");
-                    dispatch(setPlaylist(favorites));
+                    dispatch(setPlaylist('favorites'));
                     setIsMenuVisible(false);
                   }}
                 >

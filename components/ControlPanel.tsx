@@ -11,8 +11,18 @@ enum Direction {
 }
 
 export const ControlPanel = () => {
-  const { playback, currentSong } = useSelector((state: RootState) => state.playback);
-  const { songs } = useSelector((state: RootState) => state.songs);
+
+  const { playback, currentSong, songs, favorites, playlist } = useSelector(
+    (state: RootState) => ({
+      playback: state.playback.playback,
+      currentSong: state.playback.currentSong,
+      songs: state.songs.songs,
+      favorites: state.favorites.favorites,
+      playlist: state.playlist.playlist,
+    })
+  );
+
+  const toPlay = playlist === 'all' ? songs : favorites;
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -28,14 +38,14 @@ export const ControlPanel = () => {
     if (!currentSong) {
       return
     }
-    const currentSongIndex = songs.findIndex(
-      (song) => song.id === currentSong?.id
+    const currentSongIndex = toPlay.findIndex(
+      (toPlay) => toPlay.id === currentSong?.id
     );
 
     if (direction === Direction.forward) {
-      const newSong = songs[currentSongIndex + 1];
+      const newSong = toPlay[currentSongIndex + 1];
 
-      if (currentSongIndex + 1 <= songs.length) {
+      if (currentSongIndex + 1 <= toPlay.length) {
         setCurrentSong(newSong);
         dispatch(playbackControl(newSong));
       } else {
@@ -44,7 +54,7 @@ export const ControlPanel = () => {
     }
 
     if (direction === Direction.backward) {
-      const newSong = songs[currentSongIndex - 1];
+      const newSong = toPlay[currentSongIndex - 1];
 
       if (currentSongIndex - 1 >= 0) {
         setCurrentSong(newSong);
