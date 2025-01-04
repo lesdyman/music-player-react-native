@@ -13,25 +13,16 @@ import { OpenPlaylistButton } from "../components/OpenPlaylistButtom";
 import { fetchFavoritesFromStorage } from "../utils/utils";
 import { setFavorites } from "../features/Favorites";
 import { setPlaylist } from "../features/Playlist";
-import { Slider } from "react-native-awesome-slider";
-import { useSharedValue } from "react-native-reanimated";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { changeVolume } from "../features/Playback";
+import { VolumeControl } from "../components/VolumeControl";
 
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { currentSong, volume } = useSelector(
-    (state: RootState) => state.playback
-  );
+  const { currentSong } = useSelector((state: RootState) => state.playback);
   const { songs } = useSelector((state: RootState) => state.songs);
 
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
-
-  const progress = useSharedValue(volume);
-  const min = useSharedValue(0);
-  const max = useSharedValue(1);
 
   const loadFavs = async () => {
     const favs = await fetchFavoritesFromStorage();
@@ -55,12 +46,8 @@ export const Main = () => {
   //   console.log("handleSheetChanges", index);
   // }, []);
 
-  const handleVolumeChange = (value: number) => {
-    dispatch(changeVolume(value));
-  };
-
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1}}>
       <LinearGradient
         colors={["#2C3137", "#17191D"]}
         start={{ x: 0, y: 0 }}
@@ -92,43 +79,7 @@ export const Main = () => {
 
         <ProgressBar />
         <ControlPanel />
-
-        <View
-          style={{
-            flexDirection: "row",
-            height: 30,
-            width: "80%",
-            // borderWidth: 1,
-            // borderColor: "red",
-            gap: 5,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Ionicons name="volume-low" size={20} color={"#797C7F"} />
-          <Slider
-            minimumValue={min}
-            progress={progress}
-            maximumValue={max}
-            containerStyle={{
-              backgroundColor: "#111216",
-              borderWidth: 1,
-              borderColor: "#383B46",
-              borderRadius: 5,
-              width: "100%",
-            }}
-            theme={{
-              minimumTrackTintColor: "#D6361F",
-              heartbeatColor: "red",
-            }}
-            renderBubble={() => null}
-            onValueChange={(value) => {
-              handleVolumeChange(value);
-              progress.value = value;
-            }}
-          />
-          <Ionicons name="volume-high" size={20} color={"#797C7F"} />
-        </View>
+        <VolumeControl />
 
         <OpenPlaylistButton handlePlaylistOpen={handlePlaylistOpen} />
 
