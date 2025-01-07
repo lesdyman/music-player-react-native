@@ -8,20 +8,50 @@ import {
   playbackControl,
   setPlayback,
   setCurrentSong,
+  changePlaybackPosition,
 } from "../features/Playback";
+import { PanGestureHandler } from "react-native-gesture-handler";
+import { useSharedValue, withTiming } from "react-native-reanimated";
 
 export const ProgressBar = () => {
   const { currentSong, playback } = useSelector(
     (state: RootState) => state.playback
   );
 
-  const { songs } = useSelector((state: RootState) => state.songs);
+  const songs = useSelector((state: RootState) => state.songs.songs);
 
   const [timePassed, setTimePassed] = useState(0);
 
   const whatIsPlaying = useRef(currentSong);
 
   const dispatch = useDispatch<AppDispatch>();
+
+  let progress = useSharedValue(0);
+
+  useEffect(() => {
+    progress.value = currentSong?.duration
+      ? timePassed / currentSong.duration
+      : 0;
+  }, [timePassed, currentSong]);
+
+  const handleGesture = ({ nativeEvent }: any) => {
+    if (currentSong?.duration) {
+      const newProgress = Math.min(
+        Math.max(0, nativeEvent.x / 230),
+        1
+      );
+      const newTime = Math.round(newProgress * currentSong.duration);
+
+      setTimePassed(newTime);
+      console.log(`NEW TIME: ${newTime}`)
+      dispatch(changePlaybackPosition(newTime));
+      progress.value = withTiming(newProgress, { duration: 200 });
+    }
+  };
+
+  // const animatedProgressStyle = useAnimatedStyle(() => ({
+  //   width: `${progress.value * 100}%`,
+  // }));
 
   const timer = () => {
     if (currentSong && playback) {
@@ -68,9 +98,9 @@ export const ProgressBar = () => {
     }
   }, [timePassed, currentSong]);
 
-  const progress = currentSong?.duration
-    ? timePassed / currentSong.duration
-    : 0;
+  // const progress = currentSong?.duration
+  //   ? timePassed / currentSong.duration
+  //   : 0;
 
   const timeFormater = (time: number) => {
     let minutes = 0;
@@ -88,17 +118,21 @@ export const ProgressBar = () => {
   return (
     <View style={styles.progressBarBlock}>
       <Text style={styles.timerText}>{timeFormater(timePassed)}</Text>
-      <View style={styles.progressBarShadow}>
-        <Progress.Bar
-          color="#FF611A"
-          unfilledColor="#1b1b1b"
-          borderColor="#CB340D"
-          borderWidth={1}
-          width={230}
-          height={5}
-          progress={progress}
-        />
-      </View>
+
+      <PanGestureHandler onGestureEvent={handleGesture}>
+        <View style={styles.progressBarShadow}>
+          <Progress.Bar
+            color="#FF611A"
+            unfilledColor="#1b1b1b"
+            borderColor="#CB340D"
+            borderWidth={1}
+            width={230}
+            height={5}
+            progress={progress.value}
+          />
+        </View>
+      </PanGestureHandler>
+
       <Text style={styles.timerText}>
         {currentSong?.duration
           ? timeFormater(currentSong.duration - timePassed)

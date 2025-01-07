@@ -15,10 +15,10 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
   const snapPoints = useMemo(() => ["25%", "50%", "85%"], []);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { songs } = useSelector((state: RootState) => state.songs);
-  const { currentSong } = useSelector((state: RootState) => state.playback);
-  const { playlist } = useSelector((state: RootState) => state.playlist);
-  const { favorites } = useSelector((state: RootState) => state.favorites);
+  const songs = useSelector((state: RootState) => state.songs.songs);
+  const currentSong = useSelector((state: RootState) => state.playback.currentSong);
+  const playlist = useSelector((state: RootState) => state.playlist.playlist);
+  const favorites = useSelector((state: RootState) => state.favorites.favorites);
 
   const handlePlaylistClose = () => {
     if (ref && (ref as React.MutableRefObject<BottomSheetMethods>).current) {

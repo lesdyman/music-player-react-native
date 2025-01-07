@@ -25,8 +25,8 @@ export const CustomCell: React.FC<Props> = ({
 }) => {
   const isActive = activeSong?.id === song.id;
 
-  const { playback } = useSelector((state: RootState) => state.playback);
-  const { favorites } = useSelector((state: RootState) => state.favorites);
+  const playback = useSelector((state: RootState) => state.playback.playback);
+  const favorites = useSelector((state: RootState) => state.favorites.favorites);
 
   const dispatch = useDispatch();
 
@@ -35,7 +35,7 @@ export const CustomCell: React.FC<Props> = ({
       colors={
         isActive
           ? ["#FF611A", "#000000"]
-          : ["#0E1013", "#0E1013", "transparent"]
+          : ["#0E1013", "#0E1013"]
       }
       start={{ x: 1, y: 0 }}
       end={{ x: 0, y: 1 }}

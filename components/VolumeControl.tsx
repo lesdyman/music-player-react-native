@@ -7,8 +7,8 @@ import { AppDispatch, RootState } from "../data/store";
 import { changeVolume } from "../features/Playback";
 
 export const VolumeControl = () => {
-  const { volume } = useSelector((state: RootState) => state.playback);
-
+  const volume = useSelector((state: RootState) => state.playback.volume);
+  
   const progress = useSharedValue(volume);
   const min = useSharedValue(0);
   const max = useSharedValue(1);

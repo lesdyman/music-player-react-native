@@ -34,7 +34,7 @@ const PlaybackSlice = createSlice({
     },
     setVolume: (state, action: PayloadAction<number>) => {
       state.volume = action.payload;
-    }
+    },
   },
 });
 
@@ -55,12 +55,16 @@ export const playbackControl = createAsyncThunk<
     }
 
     const playbackObj = new Audio.Sound();
-    await playbackObj.loadAsync({ uri: song.audio }, { shouldPlay: true, volume });
+    await playbackObj.loadAsync(
+      { uri: song.audio },
+      { shouldPlay: true, volume }
+    );
     soundInstance = playbackObj;
     dispatch(setSound(song.audio));
     dispatch(setCurrentSong(song));
     dispatch(setPlayback(true));
-    dispatch(setVolume(volume))
+    // dispatch(setVolume(volume))
+    console.log(`This is SOUND INSTANCE: ${soundInstance}`);
   } else {
     if (playback && soundInstance) {
       await soundInstance.setStatusAsync({ shouldPlay: false });
@@ -91,5 +95,23 @@ export const changeVolume = createAsyncThunk<
   }
 });
 
-export const { setPlayback, setSound, setCurrentSong, setVolume } = PlaybackSlice.actions;
+export const changePlaybackPosition = createAsyncThunk<
+  void,
+  number,
+  { state: RootState }
+>("playback/changePlaybackPosition", async (time: number) => {
+  if (soundInstance) {
+    try {
+      await soundInstance.setPositionAsync(time * 1000);
+    } catch (error) {
+      console.log(
+        "Oops! Error occurred while changing playback position",
+        error
+      );
+    }
+  }
+});
+
+export const { setPlayback, setSound, setCurrentSong, setVolume } =
+  PlaybackSlice.actions;
 export default PlaybackSlice.reducer;

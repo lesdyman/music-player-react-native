@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 
 export const CustomTitle = () => {
 
-  const {currentSong} = useSelector((state: RootState) => state.playback)
+  const currentSong = useSelector((state: RootState) => state.playback.currentSong)
 
   const animation = useRef(new Animated.Value(0)).current;
   const { width } = Dimensions.get('screen');

@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, View } from "react-native";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
 import { ProgressBar } from "../components/ProgressBar";
 import { ControlPanel } from "../components/ControlPanel";
 import { useEffect, useRef } from "react";
@@ -18,9 +18,11 @@ import { VolumeControl } from "../components/VolumeControl";
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
+  const { width } = Dimensions.get('screen');
+
   const dispatch = useDispatch<AppDispatch>();
-  const { currentSong } = useSelector((state: RootState) => state.playback);
-  const { songs } = useSelector((state: RootState) => state.songs);
+  const currentSong = useSelector((state: RootState) => state.playback.currentSong);
+  const songs = useSelector((state: RootState) => state.songs.songs);
 
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
 
@@ -54,7 +56,7 @@ export const Main = () => {
         end={{ x: 1, y: 1 }}
         style={styles.container}
       >
-        <View style={styles.coverImageShadowUp}>
+        <View style={[styles.coverImageShadowUp, {width: width * 0.9, height: width * 0.9}]}>
           <View style={styles.coverImageShadowDown}>
             <LinearGradient
               colors={["#41464B", "#1A1B1F"]}
@@ -112,9 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: "50%",
   },
   coverImageShadowUp: {
-    width: 255,
-    height: 255,
-    marginTop: 148,
+    marginTop: 130,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: "50%",
