@@ -143,5 +143,6 @@ const styles = StyleSheet.create({
     width: 30,
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 5,
   },
 });

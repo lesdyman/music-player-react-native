@@ -27,3 +27,28 @@ export const fetchFavoritesFromStorage = async () => {
     );
   }
 };
+
+export const data = [
+  { id: "1", title: "rock", image: require("../assets/music_covers/rock.jpg") },
+  {
+    id: "2",
+    title: "hip-hop",
+    image: require("../assets/music_covers/rap.png"),
+  },
+  { id: "3", title: "pop", image: require("../assets/music_covers/pop.jpg") },
+  {
+    id: "4",
+    title: "industrial",
+    image: require("../assets/music_covers/industrial.png"),
+  },
+  {
+    id: "5",
+    title: "dance",
+    image: require("../assets/music_covers/dance.jpg"),
+  },
+  {
+    id: "6",
+    title: "metal",
+    image: require("../assets/music_covers/metal.jpg"),
+  },
+];

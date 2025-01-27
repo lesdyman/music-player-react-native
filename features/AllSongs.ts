@@ -5,15 +5,17 @@ import {
 } from "@reduxjs/toolkit";
 import { Track } from "../types/Track";
 
-const URL =
-  "https://api.jamendo.com/v3.0/tracks/?client_id=4a921162&format=json&tags=rock&limit=30";
+  const baseURL = 'https://api.jamendo.com/v3.0/tracks/?client_id=4a921162&format=json&tags=';
+  const trackLimiter = '&limit=50';
 
 interface AllSongsState {
   songs: Track[];
+  genre: string;
 }
 
 const initialState: AllSongsState = {
   songs: [],
+  genre: '',
 };
 
 const songsSlice = createSlice({
@@ -24,11 +26,14 @@ const songsSlice = createSlice({
     setSongs: (state, action: PayloadAction<Track[]>) => {
       state.songs = action.payload;
     },
+    setGenre: (state, action: PayloadAction<string>) => {
+      state.genre = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSongs.pending, (state) => {
-        console.log(`pending in process, current song state: ${state.songs}`);
+        console.log(`pending in process`);
       })
       .addCase(
         fetchSongs.fulfilled,
@@ -47,9 +52,13 @@ const songsSlice = createSlice({
 export const fetchSongs = createAsyncThunk<
   Track[],
   void,
-  { rejectValue: string }
->("songs/fetchSongs", async (_, { rejectWithValue }) => {
+  { state: { songs: AllSongsState }; rejectValue: string }
+>("songs/fetchSongs", async (_, {getState, rejectWithValue }) => {
+  const state = getState();
+  const genre = state.songs.genre;
   try {
+    const URL = baseURL + genre + trackLimiter;
+    console.log(URL);
     const response = await fetch(URL);
     if (!response.ok) {
       throw new Error(
@@ -63,5 +72,5 @@ export const fetchSongs = createAsyncThunk<
   }
 });
 
-export const { setSongs } = songsSlice.actions;
+export const { setSongs, setGenre } = songsSlice.actions;
 export default songsSlice.reducer;

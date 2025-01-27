@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     shadowColor: "#40454A",
     shadowOffset: { width: -2, height: -3 },
     shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowRadius: 2,
+    elevation: 2,
   },
   buttonShadowDown: {
     height: "100%",
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     shadowColor: "#0F1314",
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowRadius: 2,
+    elevation: 2,
   },
 });

@@ -2,22 +2,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Main } from "./screens/Main";
 import { CustomTitle } from "./components/CustomTitle";
-import { NavigationButton } from "./components/NavigationButton";
 import { useState } from "react";
-import { DropMenu } from "./components/DropMenu";
-import { DropDownMenuOption } from "./components/DropDownMenuOption";
-import { StyleSheet, Text, View } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "./data/store";
-import { setPlaylist } from "./features/Playlist";
+import { StartScreen } from "./screens/StartScreen";
+import { CustomBackButton } from "./components/CustomBackButton";
+import { RootStackParamList } from "./typs/RootStackParamList";
+import { HeaderRightButton } from "./components/HeaderRightButton";
 
 export const AppNavigation = () => {
-  const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator<RootStackParamList>();
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-
-  const dispatch = useDispatch<AppDispatch>()
 
   const toggleMenu = () => {
     setIsMenuVisible((prevState) => !prevState);
@@ -26,66 +20,34 @@ export const AppNavigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="StartScreen">
+        <Stack.Screen
+          name="StartScreen"
+          component={StartScreen}
+          options={() => ({
+            headerTransparent: true,
+            headerTintColor: "#FFF",
+            headerBackVisible: false,
+            headerTitle: "",
+            headerLargeTitleStyle: {
+              color: "#FFF",
+              textTransform: "uppercase",
+            },
+          })}
+        />
         <Stack.Screen
           name="Main"
           component={Main}
           options={() => ({
             headerTransparent: true,
-            headerLeft: () => (
-              <NavigationButton
-                icon_name="chevron-back"
-                height={46}
-                width={46}
-              />
-            ),
+            headerShadowVisible: false,
+            headerLeft: () => <CustomBackButton />,
             headerRight: () => (
-              <DropMenu
-                visible={isMenuVisible}
-                handleClose={toggleMenu}
-                trigger={
-                  <NavigationButton
-                    icon_name="ellipsis-vertical-outline"
-                    height={46}
-                    width={46}
-                    onPress={toggleMenu}
-                  />
-                }
-              >
-                <DropDownMenuOption
-                  onSelect={() => {
-                    console.log("Option 1 is selected");
-                    dispatch(setPlaylist('all'));
-                    setIsMenuVisible(false);
-                  }}
-                >
-                  <View
-                    style={[
-                      styles.menuCell,
-                      {
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#0E1013",
-                        paddingBottom: 10,
-                      },
-                    ]}
-                  >
-                    <Ionicons name="shuffle" size={20} color={"#999999"} />
-                    <Text style={styles.menuText}>Play Shuffle</Text>
-                  </View>
-                </DropDownMenuOption>
-                <DropDownMenuOption
-                  onSelect={() => {
-                    console.log("Option 2 is selected");
-                    dispatch(setPlaylist('favorites'));
-                    setIsMenuVisible(false);
-                  }}
-                >
-                  <View style={[styles.menuCell]}>
-                    <Ionicons name="heart" size={20} color={"#FE251B"} />
-                    <Text style={styles.menuText}>Play Favorites</Text>
-                  </View>
-                </DropDownMenuOption>
-              </DropMenu>
+              <HeaderRightButton
+                isMenuVisible={isMenuVisible}
+                toggleMenu={toggleMenu}
+                setIsMenuVisible={setIsMenuVisible}
+              />
             ),
             headerTitle: () => <CustomTitle />,
             headerTitleAlign: "center",
@@ -95,18 +57,3 @@ export const AppNavigation = () => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  menuCell: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderRadius: 5,
-    gap: 10,
-  },
-  menuText: {
-    color: "#999999",
-    fontSize: 15,
-    fontFamily: "RussoOne_400Regular",
-  },
-});

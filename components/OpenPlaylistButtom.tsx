@@ -27,6 +27,8 @@ export const OpenPlaylistButton: React.FC<Props> = ({ handlePlaylistOpen }) => (
           fontSize: 12,
           fontFamily: "RussoOne_400Regular",
           textTransform: "uppercase",
+          width: '100%', 
+          textAlign: 'center',
         }}
       >
         Press to open the song list

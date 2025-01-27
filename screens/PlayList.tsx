@@ -10,6 +10,8 @@ import { AppDispatch, RootState } from "../data/store";
 import { playbackControl } from "../features/Playback";
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { Track } from "../types/Track";
+import { useHeaderHeight } from "@react-navigation/elements";
+
 
 export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
   const snapPoints = useMemo(() => ["25%", "50%", "85%"], []);
@@ -26,6 +28,8 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
     }
   };
 
+  const topHlop = useHeaderHeight();
+
   const handleAudioPressed = async (song: Track) => {
     try {
       await dispatch(playbackControl(song));
@@ -33,6 +37,7 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
       console.error("Playback failed:");
     }
   };
+
 
   return (
     <BottomSheet
@@ -42,8 +47,11 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
       handleComponent={CustomHandle}
       enablePanDownToClose
       backgroundStyle={styles.sheetBackgroundStyle}
+      style={{
+        marginTop: topHlop + 10
+      }}
     >
-      <BottomSheetView style={styles.viewContainer}>
+      <BottomSheetView style={[styles.viewContainer]}>
         {/* CLOSE BUTTON */}
         <View style={styles.closeButtonContainer}>
           <TouchableWithoutFeedback onPress={handlePlaylistClose}>
@@ -59,7 +67,7 @@ export const PlayList = forwardRef<BottomSheetMethods, {}>((_, ref) => {
         </View>
 
         {/* PLAYLIST */}
-        <ScrollView horizontal={false}>
+        <ScrollView horizontal={false} indicatorStyle="white">
           {playlist === "all"
             ? songs.map((song) => (
                 <CustomCell

@@ -1,28 +1,35 @@
+import BottomSheet from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
-import { ProgressBar } from "../components/ProgressBar";
-import { ControlPanel } from "../components/ControlPanel";
-import { useEffect, useRef } from "react";
-import BottomSheet from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { ControlPanel } from "../components/ControlPanel";
+import { OpenPlaylistButton } from "../components/OpenPlaylistButtom";
+import { ProgressBar } from "../components/ProgressBar";
+import { VolumeControl } from "../components/VolumeControl";
+
+import { PlayList } from "./PlayList";
+
 import { AppDispatch, RootState } from "../data/store";
 import { fetchSongs } from "../features/AllSongs";
-import { PlayList } from "./PlayList";
-import { OpenPlaylistButton } from "../components/OpenPlaylistButtom";
-import { fetchFavoritesFromStorage } from "../utils/utils";
+import { playbackControl } from "../features/Playback";
 import { setFavorites } from "../features/Favorites";
 import { setPlaylist } from "../features/Playlist";
-import { VolumeControl } from "../components/VolumeControl";
+
+import { fetchFavoritesFromStorage } from "../utils/utils";
+
 
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-
   const { width } = Dimensions.get('screen');
 
-  const dispatch = useDispatch<AppDispatch>();
   const currentSong = useSelector((state: RootState) => state.playback.currentSong);
   const songs = useSelector((state: RootState) => state.songs.songs);
+  const genre = useSelector((state: RootState) => state.songs.genre);
+  const dispatch = useDispatch<AppDispatch>();
+  
 
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
 
@@ -41,12 +48,10 @@ export const Main = () => {
   useEffect(() => {
     if (songs.length > 0) {
       dispatch(setPlaylist("all"));
+      dispatch(playbackControl(songs[0]))
     }
-  }, [songs, dispatch]);
+  }, [songs, genre]);
 
-  // const handleSheetChanges = useCallback((index: number) => {
-  //   console.log("handleSheetChanges", index);
-  // }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>

@@ -12,16 +12,6 @@ enum Direction {
 
 export const ControlPanel = () => {
 
-  // const { playback, currentSong, songs, favorites, playlist } = useSelector(
-  //   (state: RootState) => ({
-  //     playback: state.playback.playback,
-  //     currentSong: state.playback.currentSong,
-  //     songs: state.songs.songs,
-  //     favorites: state.favorites.favorites,
-  //     playlist: state.playlist.playlist,
-  //   })
-  // );
-
   const playback = useSelector((state: RootState) => state.playback.playback);
   const currentSong = useSelector((state: RootState) => state.playback.currentSong);
   const songs = useSelector((state: RootState) => state.songs.songs);
@@ -62,7 +52,7 @@ export const ControlPanel = () => {
     if (direction === Direction.backward) {
       const newSong = toPlay[currentSongIndex - 1];
 
-      if (currentSongIndex - 1 > 0) {
+      if (currentSongIndex - 1 >= 0) {
         setCurrentSong(newSong);
         dispatch(playbackControl(newSong));
       } else {

@@ -1,10 +1,12 @@
 import { StyleSheet, View } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Slider } from "react-native-awesome-slider";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSharedValue } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
+
 import { AppDispatch, RootState } from "../data/store";
 import { changeVolume } from "../features/Playback";
+
 
 export const VolumeControl = () => {
   const volume = useSelector((state: RootState) => state.playback.volume);

@@ -47,24 +47,25 @@ export const playbackControl = createAsyncThunk<
 
   await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
 
-  if (soundInstance === null || song.id !== currentSong?.id) {
-    if (soundInstance !== null) {
+  if (!soundInstance || song.id !== currentSong?.id) {
+    if (soundInstance) {
       await soundInstance.stopAsync();
       soundInstance = null;
       dispatch(setPlayback(false));
     }
 
     const playbackObj = new Audio.Sound();
-    await playbackObj.loadAsync(
-      { uri: song.audio },
-      { shouldPlay: true, volume }
-    );
-    soundInstance = playbackObj;
-    dispatch(setSound(song.audio));
-    dispatch(setCurrentSong(song));
-    dispatch(setPlayback(true));
-    // dispatch(setVolume(volume))
-    console.log(`This is SOUND INSTANCE: ${soundInstance}`);
+    try {
+      await playbackObj.loadAsync(
+        { uri: song.audio },
+        { shouldPlay: true, volume }
+      );
+      soundInstance = playbackObj;
+      dispatch(setCurrentSong(song));
+      dispatch(setPlayback(true));
+    } catch (error) {
+      console.log("Error loading the song: ", error);
+    }
   } else {
     if (playback && soundInstance) {
       await soundInstance.setStatusAsync({ shouldPlay: false });
@@ -95,22 +96,16 @@ export const changeVolume = createAsyncThunk<
   }
 });
 
-export const changePlaybackPosition = createAsyncThunk<
-  void,
-  number,
-  { state: RootState }
->("playback/changePlaybackPosition", async (time: number) => {
-  if (soundInstance) {
-    try {
+export const changePlaybackPosition = createAsyncThunk<void, number>(
+  "playback/changePlaybackPosition",
+  async (time: number) => {
+    if (soundInstance) {
       await soundInstance.setPositionAsync(time * 1000);
-    } catch (error) {
-      console.log(
-        "Oops! Error occurred while changing playback position",
-        error
-      );
+    } else {
+      return;
     }
   }
-});
+);
 
 export const { setPlayback, setSound, setCurrentSong, setVolume } =
   PlaybackSlice.actions;
