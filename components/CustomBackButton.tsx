@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { NavigationButton } from "./NavigationButton";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../typs/RootStackParamList";
-
+import { RootStackParamList } from "../types/RootStackParamList";
 
 export const CustomBackButton = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <NavigationButton
@@ -13,7 +13,7 @@ export const CustomBackButton = () => {
       height={35}
       width={35}
       onPress={() => {
-        navigation.navigate("StartScreen")
+        navigation.navigate("StartScreen");
       }}
     />
   );

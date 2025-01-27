@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../data/store";
 import { setGenre } from "../features/AllSongs";
 
-import { RootStackParamList } from "../typs/RootStackParamList";
+import { RootStackParamList } from "../types/RootStackParamList";
 import { data } from "../utils/utils";
 
 type Props = NativeStackScreenProps<RootStackParamList, "StartScreen">;

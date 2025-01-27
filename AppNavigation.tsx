@@ -5,7 +5,7 @@ import { CustomTitle } from "./components/CustomTitle";
 import { useState } from "react";
 import { StartScreen } from "./screens/StartScreen";
 import { CustomBackButton } from "./components/CustomBackButton";
-import { RootStackParamList } from "./typs/RootStackParamList";
+import { RootStackParamList } from "./types/RootStackParamList";
 import { HeaderRightButton } from "./components/HeaderRightButton";
 
 export const AppNavigation = () => {
