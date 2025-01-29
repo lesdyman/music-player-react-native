@@ -13,23 +13,23 @@ import { VolumeControl } from "../components/VolumeControl";
 import { PlayList } from "./PlayList";
 
 import { AppDispatch, RootState } from "../data/store";
-import { fetchSongs } from "../features/AllSongs";
+import { fetchSongs, setSongs } from "../features/AllSongs";
 import { playbackControl } from "../features/Playback";
 import { setFavorites } from "../features/Favorites";
 import { setPlaylist } from "../features/Playlist";
 
 import { fetchFavoritesFromStorage } from "../utils/utils";
 
-
 export const Main = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const { width } = Dimensions.get('screen');
+  const { width } = Dimensions.get("screen");
 
-  const currentSong = useSelector((state: RootState) => state.playback.currentSong);
+  const currentSong = useSelector(
+    (state: RootState) => state.playback.currentSong
+  );
   const songs = useSelector((state: RootState) => state.songs.songs);
   const genre = useSelector((state: RootState) => state.songs.genre);
   const dispatch = useDispatch<AppDispatch>();
-  
 
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
 
@@ -48,20 +48,24 @@ export const Main = () => {
   useEffect(() => {
     if (songs.length > 0) {
       dispatch(setPlaylist("all"));
-      dispatch(playbackControl(songs[0]))
+      dispatch(playbackControl(songs[0]));
     }
-  }, [songs, genre]);
-
+  }, [songs]);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1}}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <LinearGradient
         colors={["#2C3137", "#17191D"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.container}
       >
-        <View style={[styles.coverImageShadowUp, {width: width * 0.9, height: width * 0.9}]}>
+        <View
+          style={[
+            styles.coverImageShadowUp,
+            { width: width * 0.9, height: width * 0.9 },
+          ]}
+        >
           <View style={styles.coverImageShadowDown}>
             <LinearGradient
               colors={["#41464B", "#1A1B1F"]}

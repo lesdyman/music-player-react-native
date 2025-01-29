@@ -38,6 +38,7 @@ const PlaybackSlice = createSlice({
   },
 });
 
+
 export const playbackControl = createAsyncThunk<
   void,
   Track,
@@ -50,6 +51,7 @@ export const playbackControl = createAsyncThunk<
   if (!soundInstance || song.id !== currentSong?.id) {
     if (soundInstance) {
       await soundInstance.stopAsync();
+      await soundInstance.unloadAsync();
       soundInstance = null;
       dispatch(setPlayback(false));
     }

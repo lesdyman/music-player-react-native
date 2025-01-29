@@ -38,16 +38,11 @@ export const data = [
   { id: "3", title: "pop", image: require("../assets/music_covers/pop.jpg") },
   {
     id: "4",
-    title: "industrial",
-    image: require("../assets/music_covers/industrial.png"),
-  },
-  {
-    id: "5",
     title: "dance",
     image: require("../assets/music_covers/dance.jpg"),
   },
   {
-    id: "6",
+    id: "5",
     title: "metal",
     image: require("../assets/music_covers/metal.jpg"),
   },

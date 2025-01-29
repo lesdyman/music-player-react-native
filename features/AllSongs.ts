@@ -38,6 +38,9 @@ const songsSlice = createSlice({
       .addCase(
         fetchSongs.fulfilled,
         (state, action: PayloadAction<Track[]>) => {
+          if (state.songs.length > 0) {
+            state.songs = [];
+          }
           state.songs = action.payload;
         }
       )
