@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import { useEffect, useRef, useState } from "react";
@@ -23,6 +23,8 @@ export const ProgressBar = () => {
 
   const [timePassed, setTimePassed] = useState(0);
   const [progressState, setProgressState] = useState(0);
+
+  const { width } = Dimensions.get("screen");
 
   const whatIsPlaying = useRef(currentSong);
 
@@ -117,7 +119,7 @@ export const ProgressBar = () => {
             unfilledColor="#1b1b1b"
             borderColor="#CB340D"
             borderWidth={1}
-            width={230}
+            width={width * 0.6}
             height={5}
             progress={progressState}
           />

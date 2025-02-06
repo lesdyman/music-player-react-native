@@ -2,7 +2,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ControlPanel } from "../components/ControlPanel";
@@ -14,7 +14,7 @@ import { PlayList } from "./PlayList";
 
 import { AppDispatch, RootState } from "../data/store";
 import { fetchSongs, setSongs } from "../features/AllSongs";
-import { playbackControl } from "../features/Playback";
+import { playbackControl, setPlayback } from "../features/Playback";
 import { setFavorites } from "../features/Favorites";
 import { setPlaylist } from "../features/Playlist";
 
@@ -31,6 +31,8 @@ export const Main = () => {
   const genre = useSelector((state: RootState) => state.songs.genre);
   const dispatch = useDispatch<AppDispatch>();
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const handlePlaylistOpen = () => bottomSheetRef.current?.expand();
 
   const loadFavs = async () => {
@@ -40,13 +42,23 @@ export const Main = () => {
     }
   };
 
+  // useEffect(() => {
+  //   dispatch(fetchSongs());
+  //   loadFavs();
+  // }, []);
+
   useEffect(() => {
-    dispatch(fetchSongs());
-    loadFavs();
+    const initialize = async () => {
+      setIsLoaded(false);
+     dispatch(fetchSongs());
+      await loadFavs();
+      setIsLoaded(true);
+    };
+    initialize();
   }, []);
 
   useEffect(() => {
-    if (songs.length > 0) {
+    if (isLoaded && songs.length > 0) {
       dispatch(setPlaylist("all"));
       dispatch(playbackControl(songs[0]));
     }
