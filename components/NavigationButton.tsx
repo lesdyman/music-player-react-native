@@ -1,8 +1,7 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
-import { View } from "react-native";
 import { BasicButton } from "./BasicButton";
 
 interface Props {
@@ -14,14 +13,14 @@ interface Props {
 
 export const NavigationButton: React.FC<Props> = ({ icon_name, height, width, onPress }) => (
   <View
-    style={[styles.buttonShadowUp, { height: height + 2, width: width + 2 }]}
+    style={[styles.buttonShadowUp, { height: height + 2, width: width + 2, borderRadius: (height + 2) / 2 }]}
   >
-    <View style={styles.buttonShadowDown}>
+    <View style={[styles.buttonShadowDown, { borderRadius: (height + 2) / 2 }]}>
       <LinearGradient
         colors={["#40454A", "#202329"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={styles.navButtonBorder}
+        style={[styles.navButtonBorder, { borderRadius: height / 2 }]}
       >
         <BasicButton
           icon_name={icon_name}
@@ -41,13 +40,11 @@ const styles = StyleSheet.create({
   navButtonBorder: {
     width: "100%",
     height: "100%",
-    borderRadius: "50%",
   },
 
   buttonShadowUp: {
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: "50%",
     shadowColor: "#40454A",
     shadowOffset: { width: -2, height: -3 },
     shadowOpacity: 0.8,
@@ -57,7 +54,6 @@ const styles = StyleSheet.create({
   buttonShadowDown: {
     height: "100%",
     width: "100%",
-    borderRadius: "50%",
     shadowColor: "#0F1314",
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.8,

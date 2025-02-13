@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
     overflow: "hidden",
-    borderRadius: "10%",
+    borderRadius: 50,
+    elevation: 10,
   },
   cardText: {
     fontSize: 50,
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
     left: 30,
     shadowColor: "#E34715",
     shadowRadius: 4,
+    elevation: 4,
     shadowOpacity: 0.6,
     shadowOffset: { width: 2, height: 1 },
   },

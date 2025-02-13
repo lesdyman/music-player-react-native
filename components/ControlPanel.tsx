@@ -136,10 +136,10 @@ const styles = StyleSheet.create({
   },
 
   playButtonBorder: {
-    borderRadius: "50%",
+    borderRadius: 40,
   },
   playButtonBorderGradient: {
-    borderRadius: "50%",
+    borderRadius: 40,
     height: "100%",
     width: "100%",
     alignItems: "center",
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: "50%",
+    borderRadius: 42,
     shadowColor: "#AF1905",
     shadowOffset: { width: -3, height: -4 },
     shadowOpacity: 0.8,
@@ -164,6 +164,6 @@ const styles = StyleSheet.create({
     width: 60,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: "50%",
+    borderRadius: 30,
   },
 });

@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: 10,
     padding: 5,
     alignItems: "center",
+    overflow: "hidden",
   },
   activeContainer: {
     height: 60,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   playButtonGradient: {
-    borderRadius: "50%",
+    borderRadius: 40,
     height: 30,
     width: 30,
     justifyContent: "center",
