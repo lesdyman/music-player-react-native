@@ -7,6 +7,7 @@ let soundInstance: Audio.Sound | null = null;
 
 interface PlaybackState {
   playback: boolean;
+  loadingTrack: boolean;
   sound: string | null;
   currentSong: Track | null;
   volume: number;
@@ -14,6 +15,7 @@ interface PlaybackState {
 
 const initialState: PlaybackState = {
   playback: false,
+  loadingTrack: false,
   sound: null,
   currentSong: null,
   volume: 0.3,
@@ -25,6 +27,9 @@ const PlaybackSlice = createSlice({
   reducers: {
     setPlayback: (state, action: PayloadAction<boolean>) => {
       state.playback = action.payload;
+    },
+    setLoadingTrack: (state, action: PayloadAction<boolean>) => {
+      state.loadingTrack = action.payload;
     },
     setSound: (state, action: PayloadAction<string | null>) => {
       state.sound = action.payload;
@@ -46,7 +51,10 @@ export const playbackControl = createAsyncThunk<
 >("playback/controlPlayback", async (song, { getState, dispatch }) => {
   const { playback, currentSong, volume } = getState().playback;
 
+  dispatch(setLoadingTrack(true));
+
   await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+
 
   if (!soundInstance || song.id !== currentSong?.id) {
     if (soundInstance) {
@@ -77,6 +85,7 @@ export const playbackControl = createAsyncThunk<
       dispatch(setPlayback(true));
     }
   }
+  dispatch(setLoadingTrack(false));
 });
 
 export const changeVolume = createAsyncThunk<
@@ -109,6 +118,6 @@ export const changePlaybackPosition = createAsyncThunk<void, number>(
   }
 );
 
-export const { setPlayback, setSound, setCurrentSong, setVolume } =
+export const { setPlayback, setSound, setCurrentSong, setLoadingTrack, setVolume } =
   PlaybackSlice.actions;
 export default PlaybackSlice.reducer;

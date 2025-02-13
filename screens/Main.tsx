@@ -1,6 +1,12 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  StyleSheet,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,8 +19,8 @@ import { VolumeControl } from "../components/VolumeControl";
 import { PlayList } from "./PlayList";
 
 import { AppDispatch, RootState } from "../data/store";
-import { fetchSongs, setSongs } from "../features/AllSongs";
-import { playbackControl, setPlayback } from "../features/Playback";
+import { fetchSongs } from "../features/AllSongs";
+import { playbackControl } from "../features/Playback";
 import { setFavorites } from "../features/Favorites";
 import { setPlaylist } from "../features/Playlist";
 
@@ -28,7 +34,8 @@ export const Main = () => {
     (state: RootState) => state.playback.currentSong
   );
   const songs = useSelector((state: RootState) => state.songs.songs);
-  const genre = useSelector((state: RootState) => state.songs.genre);
+  const playback = useSelector((state: RootState) => state.playback.playback);
+  const loadingTrack = useSelector((state: RootState) => state.playback.loadingTrack);
   const dispatch = useDispatch<AppDispatch>();
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -42,15 +49,10 @@ export const Main = () => {
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(fetchSongs());
-  //   loadFavs();
-  // }, []);
-
   useEffect(() => {
     const initialize = async () => {
       setIsLoaded(false);
-     dispatch(fetchSongs());
+      dispatch(fetchSongs());
       await loadFavs();
       setIsLoaded(true);
     };
@@ -79,23 +81,26 @@ export const Main = () => {
           ]}
         >
           <View style={styles.coverImageShadowDown}>
+            {loadingTrack && !playback && (
+              <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" />
+              </View>
+            )}
+
             <LinearGradient
               colors={["#41464B", "#1A1B1F"]}
               start={{ x: 0.2, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.imageBorder}
             >
-              {!currentSong ? (
-                <Image
-                  source={require("../assets/speaker_default.jpg")}
-                  style={styles.coverImage}
-                />
-              ) : (
-                <Image
-                  source={{ uri: currentSong?.album_image }}
-                  style={styles.coverImage}
-                />
-              )}
+              <Image
+                source={
+                  currentSong
+                    ? { uri: currentSong?.album_image }
+                    : require("../assets/speaker_default.jpg")
+                }
+                style={styles.coverImage}
+              />
             </LinearGradient>
           </View>
         </View>
@@ -118,13 +123,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
   },
-  text: {
-    color: "red",
-  },
   coverImage: {
     width: "100%",
     height: "100%",
-    borderRadius: "50%",
+    borderRadius: Dimensions.get("screen").width * 0.45,
     borderWidth: 5,
     borderColor: "#0F1314",
     resizeMode: "cover",
@@ -132,13 +134,13 @@ const styles = StyleSheet.create({
   imageBorder: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "50%",
+    borderRadius: Dimensions.get("screen").width * 0.45,
   },
   coverImageShadowUp: {
     marginTop: 130,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: "50%",
+    borderRadius: Dimensions.get("screen").width * 0.45,
     shadowColor: "#41464B",
     shadowOffset: { width: -7, height: -10 },
     shadowOpacity: 0.8,
@@ -148,11 +150,25 @@ const styles = StyleSheet.create({
   coverImageShadowDown: {
     width: "100%",
     height: "100%",
-    borderRadius: "50%",
+    borderRadius: Dimensions.get("screen").width * 0.45,
     shadowColor: "#0F1314",
     shadowOffset: { width: 3, height: 16 },
     shadowOpacity: 0.8,
     shadowRadius: 8,
     elevation: 8,
   },
+  loaderContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: Dimensions.get("screen").width * 0.45,
+    zIndex: 10,
+  },
 });
+
+export default Main;
