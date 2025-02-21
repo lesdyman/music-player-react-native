@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeAndroid } from "expo-av";
 import { Track } from "../types/Track";
 import { RootState, AppDispatch } from "../data/store";
 
@@ -43,49 +43,106 @@ const PlaybackSlice = createSlice({
   },
 });
 
+const togglePlayback = async (
+  soundInstance: Audio.Sound | null,
+  playback: boolean,
+  dispatch: AppDispatch
+) => {
+  if (!soundInstance) return;
+
+  if (playback) {
+    console.log("⏸ Pausing playback...");
+    await soundInstance.pauseAsync();
+    dispatch(setPlayback(false));
+  } else {
+    console.log("▶️ Resuming playback...");
+    await soundInstance.playAsync();
+    dispatch(setPlayback(true));
+  }
+};
+
+const stopAndUnloadSound = async (
+  soundInstance: Audio.Sound | null,
+  dispatch: AppDispatch
+) => {
+  if (!soundInstance) return;
+
+  console.log("🛑 Stopping and unloading previous sound...");
+  try {
+    await soundInstance.stopAsync();
+    await soundInstance.unloadAsync();
+    dispatch(setPlayback(false));
+    console.log("✅ Previous sound unloaded.");
+  } catch (error) {
+    console.error("❌ Error unloading the song:", error);
+  }
+};
+
+const loadAndPlayNewSound = async (
+  song: Track,
+  volume: number,
+  dispatch: AppDispatch
+) => {
+  console.log("🎵 Loading new sound...");
+  const playbackObj = new Audio.Sound();
+
+  try {
+    await playbackObj.loadAsync(
+      { uri: song.audio },
+      { shouldPlay: true, volume }
+    );
+
+    dispatch(setCurrentSong(song));
+    dispatch(setPlayback(true));
+    console.log("✅ New sound started playing.");
+    return playbackObj;
+  } catch (error) {
+    console.error("❌ Error loading the song:", error);
+    return null;
+  }
+};
+
+let isPlayingProcessing = false;
 
 export const playbackControl = createAsyncThunk<
   void,
   Track,
   { state: RootState; dispatch: AppDispatch }
 >("playback/controlPlayback", async (song, { getState, dispatch }) => {
-  const { playback, currentSong, volume } = getState().playback;
+  if (isPlayingProcessing) {
+    console.log("⚠️ playbackControl already in process, skipping...");
+    return;
+  }
+  isPlayingProcessing = true;
 
+  const { playback, currentSong, volume } = getState().playback;
   dispatch(setLoadingTrack(true));
 
-  await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+  try {
+    await Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: true,
+      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+      playThroughEarpieceAndroid: false,
+    });
 
+    if (soundInstance && currentSong?.id === song.id) {
+      togglePlayback(soundInstance, playback, dispatch);
+      dispatch(setLoadingTrack(false));
+      isPlayingProcessing = false;
+      return;
+    }
 
-  if (!soundInstance || song.id !== currentSong?.id) {
     if (soundInstance) {
-      await soundInstance.stopAsync();
-      await soundInstance.unloadAsync();
-      soundInstance = null;
-      dispatch(setPlayback(false));
+      await stopAndUnloadSound(soundInstance, dispatch);
     }
 
-    const playbackObj = new Audio.Sound();
-    try {
-      await playbackObj.loadAsync(
-        { uri: song.audio },
-        { shouldPlay: true, volume }
-      );
-      soundInstance = playbackObj;
-      dispatch(setCurrentSong(song));
-      dispatch(setPlayback(true));
-    } catch (error) {
-      console.log("Error loading the song: ", error);
-    }
-  } else {
-    if (playback && soundInstance) {
-      await soundInstance.setStatusAsync({ shouldPlay: false });
-      dispatch(setPlayback(false));
-    } else if (!playback && soundInstance) {
-      await soundInstance.playAsync();
-      dispatch(setPlayback(true));
-    }
+    soundInstance = await loadAndPlayNewSound(song, volume, dispatch);
+  } catch (error) {
+    console.error("❌ Error playing the song:", error);
+  } finally {
+    isPlayingProcessing = false;
   }
-  dispatch(setLoadingTrack(false));
 });
 
 export const changeVolume = createAsyncThunk<
@@ -118,6 +175,11 @@ export const changePlaybackPosition = createAsyncThunk<void, number>(
   }
 );
 
-export const { setPlayback, setSound, setCurrentSong, setLoadingTrack, setVolume } =
-  PlaybackSlice.actions;
+export const {
+  setPlayback,
+  setSound,
+  setCurrentSong,
+  setLoadingTrack,
+  setVolume,
+} = PlaybackSlice.actions;
 export default PlaybackSlice.reducer;

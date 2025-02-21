@@ -46,7 +46,7 @@ export const ProgressBar = () => {
 
       setTimePassed(newTime);
       dispatch(changePlaybackPosition(newTime));
-      progress.value = withTiming(newProgress, { duration: 200 });
+      progress.value = withTiming(newProgress, { duration: 100 });
     }
   };
 

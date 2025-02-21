@@ -49,22 +49,23 @@ export const Main = () => {
     }
   };
 
+  const initialize = async () => {
+    setIsLoaded(false);
+    await dispatch(fetchSongs());
+    await loadFavs();
+    setIsLoaded(true);
+  };
+
   useEffect(() => {
-    const initialize = async () => {
-      setIsLoaded(false);
-      dispatch(fetchSongs());
-      await loadFavs();
-      setIsLoaded(true);
-    };
     initialize();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (isLoaded && songs.length > 0) {
       dispatch(setPlaylist("all"));
       dispatch(playbackControl(songs[0]));
     }
-  }, [songs]);
+  }, [isLoaded, songs]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

@@ -15,7 +15,6 @@ export const AppNavigation = () => {
 
   const toggleMenu = () => {
     setIsMenuVisible((prevState) => !prevState);
-    console.log("hehehe");
   };
 
   return (

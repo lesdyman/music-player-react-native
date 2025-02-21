@@ -6,7 +6,6 @@ import {
 } from "@expo-google-fonts/inconsolata";
 import { RussoOne_400Regular } from "@expo-google-fonts/russo-one";
 import { Poppins_400Regular } from "@expo-google-fonts/poppins";
-import AppLoading from "expo-app-loading";
 import { RootState } from "../data/store";
 import { useSelector } from "react-redux";
 
@@ -47,7 +46,7 @@ export const CustomTitle = () => {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return
   }
 
   return (

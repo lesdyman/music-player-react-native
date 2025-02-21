@@ -4,13 +4,13 @@
     "slug": "radio-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon_r.png",
+    "icon": "./assets/radio_app_icon_no_bg.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/radio_app_icon_no_bg.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#2C3137"
     },
     "ios": {
       "supportsTablet": false,
@@ -20,8 +20,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/radio_app_icon_no_bg.png",
+        "backgroundColor": "#2C3137"
       }
     },
     "web": {

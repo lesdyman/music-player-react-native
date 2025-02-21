@@ -61,7 +61,6 @@ export const fetchSongs = createAsyncThunk<
   const genre = state.songs.genre;
   try {
     const URL = baseURL + genre + trackLimiter;
-    console.log(URL);
     const response = await fetch(URL);
     if (!response.ok) {
       throw new Error(
